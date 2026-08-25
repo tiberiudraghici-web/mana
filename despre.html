@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Despre Platformă | AOSR &amp; ULBS Sibiu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-page:       #f6f7f1;
+            --bg-card:       #ffffff;
+            --bg-card2:      #eef1e5;
+            --border:        rgba(45, 74, 43, 0.16);
+            --border-bright: rgba(45, 74, 43, 0.38);
+            --text-primary:  #1c2b1f;
+            --text-secondary:#48594a;
+            --text-muted:    #7c8a79;
+            --accent-green:  #2f7d4f;
+            --accent-brown:  #8a5a2c;
+            --status-safe:   #1f9254;
+            --status-warn:   #b36b00;
+            --status-alert:  #c0392b;
+            --mono: 'Space Mono', monospace;
+            --sans: 'Inter', sans-serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg-page);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        header {
+            position: relative; z-index: 10; padding: 0 40px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(20px);
+        }
+
+        .header-inner {
+            max-width: 1100px; margin: 0 auto; display: flex;
+            align-items: center; justify-content: space-between; gap: 20px; padding: 14px 0;
+        }
+
+        .header-logo { height: 52px; width: auto; object-fit: contain; flex-shrink: 0; }
+        .header-logo-left { order: 1; }
+        .header-farm-title { order: 2; flex: 1; font-weight: 600; font-size: 1.1rem; color: var(--text-primary); text-align: center; }
+        .header-logo-right { order: 3; }
+
+        main {
+            position: relative; z-index: 10; max-width: 1100px; margin: 0 auto;
+            padding: 60px 40px 80px; flex-grow: 1; width: 100%;
+        }
+
+        .top-actions {
+            display: flex; justify-content: flex-start; margin-bottom: 20px;
+        }
+
+        .btn-back {
+            display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: 8px; color: var(--text-secondary); font-family: var(--mono);
+            font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px;
+            text-decoration: none; transition: all 0.3s ease;
+        }
+
+        .btn-back:hover {
+            background: rgba(47, 125, 79, 0.08); border-color: var(--accent-green);
+            color: var(--accent-green); transform: translateX(-3px);
+        }
+
+        .summary-box {
+            background: rgba(47, 125, 79, 0.05);
+            border: 1px dashed var(--accent-green);
+            border-radius: 12px;
+            padding: 30px 40px;
+            margin-bottom: 40px;
+            text-align: justify;
+        }
+
+        .summary-box p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            margin: 0;
+        }
+
+        .content-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px 50px;
+            margin-bottom: 40px;
+            line-height: 1.7;
+            box-shadow: 0 1px 3px rgba(28, 43, 31, 0.05);
+        }
+
+        .page-title {
+            font-size: 2rem; color: var(--accent-green); margin-bottom: 20px; font-weight: 700;
+        }
+
+        .intro-text {
+            font-size: 1.05rem; color: var(--text-secondary); margin-bottom: 40px;
+            text-align: justify;
+        }
+
+        h3.level-title {
+            font-family: var(--mono); font-size: 1.1rem; color: var(--text-primary);
+            text-transform: uppercase; letter-spacing: 1px; margin: 35px 0 15px 0;
+            padding-bottom: 10px; border-bottom: 1px solid var(--border);
+        }
+        h3.level-title span { color: var(--accent-green); font-weight: bold; }
+
+        .content-card p {
+            font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .content-card ul { list-style: none; padding-left: 0; margin-bottom: 20px; }
+        .content-card ul li {
+            margin-bottom: 12px;
+            font-size: 0.95rem; color: var(--text-secondary);
+            text-align: justify;
+        }
+
+        strong.highlight { color: var(--text-primary); font-weight: 600; }
+
+        footer {
+            position: relative; z-index: 10; max-width: 1100px; width: 100%; margin: 0 auto;
+            padding: 40px; border-top: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: space-between;
+        }
+
+        footer .f-left { font-family: var(--mono); font-size: 0.68rem; color: var(--text-muted); line-height: 1.8; }
+        footer .f-right { font-family: var(--mono); font-size: 0.68rem; color: var(--text-muted); text-align: right; }
+
+        @media (max-width: 680px) {
+            .header-logo { height: 38px; }
+            .header-farm-title { order: 3; width: 100%; font-size: 0.85rem; }
+            .header-inner { flex-wrap: wrap; row-gap: 10px; justify-content: center; }
+            header { padding: 0 20px; }
+            main { padding: 30px 20px 60px; }
+            .content-card { padding: 30px 20px; }
+            footer { flex-direction: column; gap: 20px; text-align: center; padding: 30px 20px; }
+            footer .f-right { text-align: center; }
+            .summary-box { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <img src="Logo_AOSR.png" alt="Sigla Academia Oamenilor de Știință din România" class="header-logo header-logo-left">
+        <h1 class="header-farm-title">AOSR-TEAMS-IV 2026-2027</h1>
+        <img src="logo_SAIAPM.png" alt="Sigla SAIAPM" class="header-logo header-logo-right">
+    </div>
+</header>
+
+<main>
+    <div class="top-actions">
+        <a href="index.html" class="btn-back">← Înapoi la Dashboard</a>
+    </div>
+
+    <div class="summary-box">
+        <p><strong>Platforma de predicție și avertizare pentru mana cartofului (<i>Phytophthora infestans</i>)</strong> este un sistem suport decizional (DSS) fundamentat pe o <strong>Arhitectură Neuro-Simbolică</strong> pe 5 niveluri, dezvoltat în cadrul competiției AOSR-TEAMS-IV pentru cultura cartofului. Platforma fuzionează datele telemetrice de microclimat cu modele epidemiologice deterministe și un motor de Inteligență Artificială Generativă, urmând ca prognozele generate să fie calibrate printr-o buclă de validare Ground-Truth bazată pe teledetecție UAV și evaluări fitopatologice directe, în cadrul câmpului experimental al Fermei Didactice și de Cercetare Rusciori (ULBS Sibiu). Obiectivul central este optimizarea ferestrelor de intervenție fitosanitară și reducerea amprentei chimice a fungicidelor, fără compromiterea producției.</p>
+    </div>
+
+    <div class="content-card">
+        <h2 class="page-title">Arhitectura platformei</h2>
+        <p class="intro-text">Sistemul separă rigurozitatea matematică de capacitatea de sinteză, procesând determinist telemetria prin modele epidemiologice validate științific pentru <i>Phytophthora infestans</i> (Nivelul Simbolic), iar ulterior utilizând un motor de Inteligență Artificială Generativă (Nivelul Cognitiv) pentru a formula recomandări fitosanitare în limbaj natural, restricționat strict de output-ul simbolic prevalidat.</p>
+
+        <h3 class="level-title"><span>Nivelul 1:</span> Achiziția datelor (Data Ingestion Level)</h3>
+        <p>Acest nivel reprezintă interfața sistemului cu mediul fizic, având rolul de a agrega date heterogene, spațio-temporale, din câmpul experimental de cartof.</p>
+        <ul>
+            <li><strong class="highlight">Vectorul istoric (Telemetrie <i>in-situ</i>):</strong> Achiziția datelor deterministe de microclimat prin intermediul stației meteorologice Davis Vantage Pro 2 Plus, amplasată în cadrul Fermei Didactice și de Cercetare Rusciori (temperatură, umiditate relativă, precipitații, durata umectării foliare).</li>
+            <li><strong class="highlight">Vectorul predictiv (Prognoză API):</strong> Extragerea prognozelor meteorologice pe un orizont de 48 de ore, necesare translației de la o analiză retrospectivă la una proactivă (prevenție).</li>
+        </ul>
+
+        <h3 class="level-title"><span>Nivelul 2:</span> Procesare deterministă și modelare matematică (Symbolic Level)</h3>
+        <p>Reprezintă stratul „rigid” al platformei, unde rețelele neuronale nu au voie să intervină. Datele climatice sunt procesate prin algoritmi determiniști validați pentru biologia pseudociupercii <i>Phytophthora infestans</i>:</p>
+        <ul>
+            <li><strong class="highlight">Model epidemiologic:</strong> Adaptare a modelului Ullrich/Schrödter, evaluând suprapunerea intervalelor de umiditate relativă ≥ 90% cu temperaturi optime de 10–25°C, în funcție de modul de germinare al agentului fitopatogen.</li>
+            <li><strong class="highlight">Output:</strong> Rezultatul acestui strat este un scor matematic de risc epidemiologic, fără intervenție AI.</li>
+        </ul>
+
+        <h3 class="level-title"><span>Nivelul 3:</span> Raționament generativ și sinteză (Cognitive Level)</h3>
+        <p>Acest nivel transformă logica matematică într-o decizie agronomică aplicabilă, utilizând un Model de Limbaj Mare (LLM).</p>
+        <ul>
+            <li><strong class="highlight">Mecanism de funcționare:</strong> Motorul cognitiv, implementat prin API-ul Google Gemini, primește exclusiv output-ul pre-procesat al Nivelului 2, un vector de decizie cu câmpuri strict tipizate (temperatura medie, ore de umectare foliară, stadiu fenologic, scor de risc, tip de alertă).</li>
+
+        <h3 class="level-title"><span>Nivelul 4:</span> Validare și feedback (Ground-Truth și Calibrare)</h3>
+        <p>Un sistem hibrid necesită ancorare în realitatea obiectivă pentru a preveni deriva modelului (model drift). Sola experimentală este divizată într-un lot de control, gestionat prin metoda clasică, și un lot experimental, gestionat exclusiv prin alertele platformei.</p>
+        <ul>
+            <li><strong class="highlight">Teledetecție:</strong> Zboruri UAV periodice pentru extragerea indicelui multispectral NDVI, capabil să detecteze stresul biotic pre-simptomatic indus de mană.</li>
+            <li><strong class="highlight">Evaluări fitopatologice directe:</strong> Observații <i>in-situ</i> pentru confirmarea sau infirmarea acurateței alertelor emise de platformă.</li>
+            <li><strong class="highlight">Criterii de validare:</strong> Sensibilitate (Recall) ≥ 85%, Specificitate ≥ 80% și avans de avertizare ≥ 24 de ore față de declanșarea infecției confirmate în câmp.</li>
+        </ul>
+
+        <h3 class="level-title"><span>Nivelul 5:</span> Prezentare și trasabilitate (UI &amp; Persistence Layer)</h3>
+        <p>Etapa finală se ocupă de diseminarea informației și de formarea memoriei instituționale a fermei.</p>
+        <ul>
+            <li><strong class="highlight">Prezentare dinamică:</strong> Generarea unor obiecte structurate (fișiere JSON) care alimentează asincron dashboard-ul web responsiv.</li>
+            <li><strong class="highlight">Registru fitosanitar digital:</strong> Validarea în platformă a fiecărui tratament aplicat (produs comercial, substanță activă, doză), pentru ca motorul AI să ia în calcul remanența fungicidului și să evite recomandările redundante.</li>
+        </ul>
+
+        <hr style="border:none; border-top:1px solid var(--border); margin: 40px 0;">
+
+        <h2 class="page-title" style="font-size: 1.6rem;">Structura platformei: Modulele de interfață</h2>
+        <p>Rezultatul acestui pipeline este distribuit în 2 module de expertiză, vizibile în dashboard:</p>
+        <ul>
+            <li><strong class="highlight">Modulul Monitorizare Fitosanitară:</strong> Evaluează și anticipează riscul de infecție cu <i>Phytophthora infestans</i> pe baza corelației dintre temperatură, umiditate relativă și umectarea foliară.</li>
+            <li><strong class="highlight">Modulul Ground-Truth:</strong> Interfața prin care specialistul introduce datele de la Nivelul 4 (ortofotoplanuri NDVI, evaluări fitopatologice, registru agrotehnic), asigurând bucla de calibrare a sistemului.</li>
+        </ul>
+    </div>
+</main>
+
+<footer>
+    <div class="f-left">
+        Ș.l. Dr. Ing. <strong style="color:var(--text-secondary)">Alexandra Frățilă</strong><br>
+        Asist. Univ. Dr. Ing. <strong style="color:var(--text-secondary)">Tiberiu Drăghici</strong><br>
+    </div>
+    <div class="f-right">
+        Proiect AOSR-TEAMS-IV 2026-2027<br>
+        <span style="color: var(--accent-green);">Arhitectură Neuro-Simbolică pentru Prognoza Manei Cartofului</span>
+    </div>
+</footer>
+
+</body>
+</html>

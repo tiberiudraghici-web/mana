@@ -1,0 +1,20 @@
+# 1. Ignoră TOT codul sursă și configurările (protejează config.py)
+*.py
+__pycache__/
+*.pyc
+
+# 2. Ignoră cheile de acces și credențialele
+credentialsGCloud.json
+.env
+
+# 3. Ignoră baza de date meteo (transferată de pe Pi)
+*.sdb
+*.sqlite
+
+# 4. Ignoră memoria locală a AI-ului (previne conflictele pe Git)
+module_deterministe/baza_date_locala/
+
+# 5. Ignoră fișierele de sistem Windows și loguri
+Thumbs.db
+desktop.ini
+*.log

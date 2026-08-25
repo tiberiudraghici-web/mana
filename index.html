@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platformă DSS Mana Cartofului | AOSR &amp; ULBS Sibiu</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-page:       #f6f7f1;
+            --bg-card:       #ffffff;
+            --bg-card2:      #eef1e5;
+            --border:        rgba(45, 74, 43, 0.16);
+            --border-bright: rgba(45, 74, 43, 0.38);
+            --text-primary:  #1c2b1f;
+            --text-secondary:#48594a;
+            --text-muted:    #7c8a79;
+            --accent-green:  #2f7d4f;
+            --accent-brown:  #8a5a2c;
+            --status-safe:   #1f9254;
+            --status-warn:   #b36b00;
+            --status-alert:  #c0392b;
+            --mono: 'Space Mono', monospace;
+            --sans: 'Inter', sans-serif;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg-page);
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        header {
+            position: relative; z-index: 10; padding: 0 40px;
+            border-bottom: 1px solid var(--border);
+            background: rgba(255,255,255,0.85); backdrop-filter: blur(20px);
+        }
+
+        .header-inner {
+            max-width: 1100px; margin: 0 auto; display: flex;
+            align-items: center; justify-content: space-between; gap: 20px; padding: 14px 0;
+        }
+
+        .header-logo { height: 52px; width: auto; object-fit: contain; flex-shrink: 0; }
+        .header-logo-left { order: 1; }
+        .header-farm-title { order: 2; flex: 1; font-weight: 600; font-size: 1.1rem; color: var(--text-primary); text-align: center; }
+        .header-logo-right { order: 3; }
+
+        main {
+            position: relative; z-index: 10; max-width: 1100px; margin: 0 auto; padding: 60px 40px;
+        }
+
+        .page-title {
+            text-align: center; font-family: var(--sans); font-size: 1.8rem;
+            margin-bottom: 40px; color: var(--text-primary);
+        }
+
+        .project-description {
+            text-align: justify;
+            width: 100%;
+            margin: -20px auto 40px auto;
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        .module-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .module-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 40px 30px;
+            text-align: center;
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            box-shadow: 0 1px 3px rgba(28, 43, 31, 0.05);
+        }
+
+        a.module-card:hover {
+            border-color: var(--accent-green);
+            background: var(--bg-card2);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(47, 125, 79, 0.14);
+        }
+        .card-centrat {
+            grid-column: 1 / -1;
+            justify-self: center;
+            width: calc(50% - 12px);
+        }
+
+        .card-full-width {
+            grid-column: 1 / -1;
+            width: 100%;
+        }
+
+        @media (max-width: 680px) {
+            .card-centrat {
+                width: 100%;
+                grid-column: auto;
+            }
+            .top-actions { margin-bottom: 15px; justify-content: center; }
+        }
+
+        .module-icon { font-size: 3rem; margin-bottom: 20px; }
+        .module-title { font-size: 1.3rem; font-weight: 600; color: var(--accent-green); margin-bottom: 10px; }
+        .module-desc { font-size: 0.9rem; color: var(--text-secondary); line-height: 1.5; }
+
+        .pathogen-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-top: 25px;
+            width: 100%;
+        }
+
+        .pathogen-btn {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-page);
+            border: 1px solid var(--border);
+            padding: 12px 16px;
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+        }
+
+        a.pathogen-btn:hover {
+            border-color: var(--accent-green);
+            background: var(--bg-card2);
+            transform: translateX(5px);
+        }
+
+        .status-badge {
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-weight: bold;
+            background: rgba(28, 43, 31, 0.05);
+            color: var(--text-secondary);
+            text-transform: uppercase;
+        }
+
+       @media (max-width: 680px) {
+            .header-logo { height: 38px; }
+            .header-farm-title { order: 3; width: 100%; font-size: 0.85rem; }
+            .header-inner { flex-wrap: wrap; row-gap: 10px; justify-content: center; }
+            header { padding: 0 20px; }
+            main { padding: 40px 20px; }
+            .page-title { font-size: 1.4rem; margin-bottom: 30px; }
+            .module-grid { grid-template-columns: 1fr; gap: 16px; }
+            .module-card { padding: 30px 20px; }
+            footer { flex-direction: column; gap: 20px; text-align: center; padding: 30px 20px; }
+            footer .f-right { text-align: center; }
+            .card-centrat { width: 100%; grid-column: auto; }
+        }
+
+        .bottom-actions {
+            display: flex;
+            justify-content: center;
+            margin-top: 50px;
+            width: 100%;
+        }
+
+        .btn-despre {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 28px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-family: var(--mono);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-despre:hover {
+            background: rgba(47, 125, 79, 0.08);
+            border-color: var(--accent-green);
+            color: var(--accent-green);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(47, 125, 79, 0.12);
+        }
+
+        .icon-info {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+        footer {
+            position: relative;
+            z-index: 10;
+            max-width: 1100px;
+            margin: 40px auto 0;
+            padding: 40px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        footer .f-left { font-family: var(--mono); font-size: 0.68rem; color: var(--text-muted); line-height: 1.8; }
+        footer .f-right { font-family: var(--mono); font-size: 0.68rem; color: var(--text-muted); text-align: right; }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="header-inner">
+        <img src="Logo_AOSR.png" alt="Sigla Academia Oamenilor de Știință din România" class="header-logo header-logo-left">
+        <h1 class="header-farm-title">AOSR-TEAMS-IV 2026-2027</h1>
+        <img src="logo_SAIAPM.png" alt="Sigla SAIAPM" class="header-logo header-logo-right">
+    </div>
+</header>
+
+<main>
+    <h2 class="page-title">Platformă de predicție și avertizare pentru mana cartofului (<i>Phytophthora infestans</i>) pe baza datelor de microclimat cu arhitectură neuro-simbolică</h2>
+
+    <div class="module-grid">
+        <a href="mana.html" class="module-card">
+            <div class="module-icon">🥔</div>
+            <div class="module-title">Monitorizare Fitosanitară</div>
+
+            <div class="pathogen-list">
+                <div class="pathogen-btn">
+                    <span><i>Phytophthora infestans</i></span>
+                    <span class="status-badge" id="status-mana">Se încarcă...</span>
+                </div>
+            </div>
+        </a>
+        <a href="teren.html" class="module-card">
+            <div class="module-icon">🧑‍🌾</div>
+            <div class="module-title">Ground-Truth</div>
+        </a>
+    </div>
+    <div class="bottom-actions">
+        <a href="despre.html" class="btn-despre">
+            <span class="icon-info">ℹ️</span> Despre
+        </a>
+    </div>
+</main>
+
+<footer>
+    <div class="f-left">
+        Ș.l. Dr. Ing. <strong style="color:var(--text-secondary)">Alexandra Frățilă</strong><br>
+        Asist. Univ. Dr. Ing. <strong style="color:var(--text-secondary)">Tiberiu Drăghici</strong><br>
+    </div>
+    <div class="f-right">
+        Proiect AOSR-TEAMS-IV 2026-2027<br>
+        <span style="color: var(--accent-green);">Arhitectură Neuro-Simbolică pentru Prognoza Manei Cartofului</span>
+    </div>
+</footer>
+
+<script>
+    fetch('raport.json')
+        .then(response => response.json())
+        .then(data => {
+
+            const updateStatus = (elementId, statusText) => {
+                const badge = document.getElementById(elementId);
+                if (!badge || !statusText) return;
+
+                badge.textContent = statusText;
+                let text = statusText.toLowerCase();
+
+                badge.style.border = '1px solid';
+
+                if (text.includes('ridicat') || text.includes('alertă')) {
+                    badge.style.color = 'var(--status-alert)';
+                    badge.style.backgroundColor = 'rgba(192, 57, 43, 0.1)';
+                    badge.style.borderColor = 'rgba(192, 57, 43, 0.35)';
+                }
+                else if (text.includes('moderat') || text.includes('risc')) {
+                    badge.style.color = 'var(--status-warn)';
+                    badge.style.backgroundColor = 'rgba(179, 107, 0, 0.1)';
+                    badge.style.borderColor = 'rgba(179, 107, 0, 0.35)';
+                }
+                else if (text.includes('sănătos') || text.includes('inexistent') || text.includes('optim')) {
+                    badge.style.color = 'var(--status-safe)';
+                    badge.style.backgroundColor = 'rgba(31, 146, 84, 0.1)';
+                    badge.style.borderColor = 'rgba(31, 146, 84, 0.35)';
+                }
+                else {
+                    badge.style.color = 'var(--text-muted)';
+                    badge.style.backgroundColor = 'rgba(28, 43, 31, 0.05)';
+                    badge.style.borderColor = 'var(--border)';
+                }
+            };
+
+            if (data.mana_cartofului) updateStatus('status-mana', data.mana_cartofului.status);
+        })
+        .catch(err => {
+            console.error('Eroare încărcare raport.json:', err);
+
+            const badges = document.querySelectorAll('.status-badge');
+            badges.forEach(b => {
+                b.textContent = 'DATE INDISPONIBILE';
+                b.style.color = 'var(--text-muted)';
+            });
+        });
+</script>
+
+</body>
+</html>
