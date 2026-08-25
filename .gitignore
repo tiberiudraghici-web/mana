@@ -18,3 +18,5 @@ module_deterministe/baza_date_locala/
 Thumbs.db
 desktop.ini
 *.log
+*.docx
+~$*
