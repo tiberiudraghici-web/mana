@@ -69,6 +69,34 @@
             line-height: 1.6;
         }
 
+        .project-description a {
+            color: var(--accent-green);
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .project-description a:hover {
+            text-decoration: underline;
+        }
+
+        .beta-disclaimer {
+            text-align: center;
+            font-family: var(--mono);
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin: 0 auto 40px auto;
+            max-width: 900px;
+            padding: 12px 20px;
+            background: rgba(179, 107, 0, 0.05);
+            border: 1px dashed rgba(179, 107, 0, 0.3);
+            border-radius: 8px;
+            line-height: 1.6;
+        }
+
+        .beta-disclaimer strong {
+            color: var(--status-warn);
+        }
+
         .module-grid {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -239,6 +267,13 @@
 
 <main>
     <h2 class="page-title">Platformă de predicție și avertizare pentru mana cartofului (<i>Phytophthora infestans</i>) pe baza datelor de microclimat cu arhitectură neuro-simbolică</h2>
+
+    <p class="project-description" style="text-align: center;">
+        Platforma face obiectul proiectului din cadrul competiției AOSR-TEAMS-IV 2026-2027 — pentru mai multe detalii, accesați secțiunea <a href="despre.html">„Despre"</a>.
+    </p>
+    <div class="beta-disclaimer">
+        <strong>[VERSIUNE ALPHA]</strong> Platforma rulează <i>in silico</i>. Informațiile nu sunt actualizate în timp real, pot apărea neconcordanțe între date, precum și erori de funcționare (bug-uri) în timpul utilizării.
+    </div>
 
     <div class="module-grid">
         <div class="module-card card-full-width" style="cursor: default; border-color: var(--accent-green); background: var(--bg-card2);">
