@@ -399,18 +399,36 @@
         return opt;
     }
 
-    function populeazaSoiuriPlantare() {
-        const select = document.getElementById('inpSoiPlantat');
-        if (!select) return;
-        select.innerHTML = '';
-        const nume = Object.keys(catalogSoiuri);
-        if (nume.length === 0) {
-            select.appendChild(creeazaOptiune('', 'Niciun soi definit în nomenclator', {disabled: true, selected: true}));
-            return;
-        }
-        select.appendChild(creeazaOptiune('', '-- Selectați soiul --', {disabled: true, selected: true, hidden: true}));
-        nume.forEach(n => select.appendChild(creeazaOptiune(n, n)));
+    function resetCampSoiPlantare() {
+        const input = document.getElementById('inpSoiPlantat');
+        if (input) input.value = '';
+        const list = document.getElementById('sugestiiSoiPlantare');
+        if (list) { list.innerHTML = ''; list.style.display = 'none'; }
         afiseazaCaracteristiciSoi('');
+    }
+
+    function filtreazaSugestiiSoi(input) {
+        const list = document.getElementById('sugestiiSoiPlantare');
+        if (!list) return;
+        const val = input.value.toLowerCase();
+        list.innerHTML = '';
+
+        if (!val) { list.style.display = 'none'; return; }
+
+        const matches = Object.keys(catalogSoiuri).filter(s => s.toLowerCase().includes(val));
+        if (matches.length === 0) { list.style.display = 'none'; return; }
+
+        matches.forEach(match => {
+            const div = document.createElement('div');
+            div.textContent = match;
+            div.onclick = function() {
+                input.value = match;
+                list.style.display = 'none';
+                afiseazaCaracteristiciSoi(match);
+            };
+            list.appendChild(div);
+        });
+        list.style.display = 'block';
     }
 
     async function populeazaSoiuriRecoltare() {
@@ -752,6 +770,13 @@ async function aplicăAutentificareReușită(idToken, email) {
        plantare: `
             <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px;">
                 <div style="flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 20px;">
+                    <div class="form-group autocomplete-wrapper">
+                        <label for="inpSoiPlantat">Soi</label>
+                        <input type="text" id="inpSoiPlantat" class="autocomplete-input"
+                               oninput="filtreazaSugestiiSoi(this)"
+                               placeholder="Scrieți 2-3 litere pentru sugestii..." autocomplete="off">
+                        <div class="autocomplete-list" id="sugestiiSoiPlantare"></div>
+                    </div>
                     <div class="form-group">
                         <label for="inpPerioadaVegetatie">Perioadă de vegetație</label>
                         <select id="inpPerioadaVegetatie">
@@ -760,12 +785,6 @@ async function aplicăAutentificareReușită(idToken, email) {
                             <option value="Timpuriu">Timpuriu</option>
                             <option value="Târziu">Târziu</option>
                             <option value="Extratârziu">Extratârziu</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label for="inpSoiPlantat">Soi</label>
-                        <select id="inpSoiPlantat" onchange="afiseazaCaracteristiciSoi(this.value)">
-                            <option value="" disabled selected hidden>Se încarcă soiurile...</option>
                         </select>
                     </div>
                 </div>
@@ -836,7 +855,7 @@ async function aplicăAutentificareReușită(idToken, email) {
             </div>
             <div class="form-group autocomplete-wrapper">
                 <label>Nume Produs</label>
-                <input type="text" class="p-nume" oninput="filtreazaSugestii(this, ${produsIdCounter})" placeholder="Scrieți pentru sugestii..." autocomplete="off">
+                <input type="text" class="p-nume autocomplete-input" oninput="filtreazaSugestii(this, ${produsIdCounter})" placeholder="Scrieți pentru sugestii..." autocomplete="off">
                 <div class="autocomplete-list" id="sugestii_${produsIdCounter}"></div>
             </div>
             <div class="form-group">
@@ -913,7 +932,7 @@ function autoCompleteaza(input) {
 }
 
 document.addEventListener('click', function(e) {
-    if (!e.target.classList.contains('p-nume')) {
+    if (!e.target.classList.contains('autocomplete-input')) {
         document.querySelectorAll('.autocomplete-list').forEach(l => l.style.display = 'none');
     }
 });
@@ -983,7 +1002,7 @@ catSelect.addEventListener('change', function() {
         dynamicFields.innerHTML = sabloaneCampuri.fertilizare;
     } else if (cat === 'Plantare') {
         dynamicFields.innerHTML = sabloaneCampuri.plantare;
-        populeazaSoiuriPlantare();
+        resetCampSoiPlantare();
     } else if (cat === 'Recoltare') {
         dynamicFields.innerHTML = sabloaneCampuri.recoltare;
         populeazaSoiuriRecoltare();
