@@ -492,14 +492,6 @@
             linie.appendChild(document.createTextNode(valoare || '-'));
             box.appendChild(linie);
         });
-
-        const selectPerioada = document.getElementById('inpPerioadaVegetatie');
-        if (selectPerioada && detalii.perioadaVegetatie) {
-            const optiuniValide = Array.from(selectPerioada.options).map(o => o.value);
-            if (optiuniValide.includes(detalii.perioadaVegetatie)) {
-                selectPerioada.value = detalii.perioadaVegetatie;
-            }
-        }
     }
 
     async function incarcaNomenclator() {
@@ -769,23 +761,13 @@ async function aplicăAutentificareReușită(idToken, email) {
         `,
        plantare: `
             <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px;">
-                <div style="flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 20px;">
+                <div style="flex: 1; min-width: 220px;">
                     <div class="form-group autocomplete-wrapper">
                         <label for="inpSoiPlantat">Soi</label>
                         <input type="text" id="inpSoiPlantat" class="autocomplete-input"
                                oninput="filtreazaSugestiiSoi(this)"
                                placeholder="Scrieți 2-3 litere pentru sugestii..." autocomplete="off">
                         <div class="autocomplete-list" id="sugestiiSoiPlantare"></div>
-                    </div>
-                    <div class="form-group">
-                        <label for="inpPerioadaVegetatie">Perioadă de vegetație</label>
-                        <select id="inpPerioadaVegetatie">
-                            <option value="" disabled selected hidden>-- Selectați --</option>
-                            <option value="Extratimpuriu">Extratimpuriu</option>
-                            <option value="Timpuriu">Timpuriu</option>
-                            <option value="Târziu">Târziu</option>
-                            <option value="Extratârziu">Extratârziu</option>
-                        </select>
                     </div>
                 </div>
                 <div id="boxCaracteristiciSoi" style="flex: 1; min-width: 220px; background: var(--bg-card2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; display: flex; align-items: center; justify-content: center; text-align: center;">
@@ -1092,11 +1074,11 @@ async function trimiteDate() {
             payload.dozaFert = document.getElementById('inpDozaFert') ? document.getElementById('inpDozaFert').value : "";
         }
         else if (categorie === 'Plantare') {
-            payload.perioadaVegetatie = document.getElementById('inpPerioadaVegetatie') ? document.getElementById('inpPerioadaVegetatie').value : "";
             payload.soi = document.getElementById('inpSoiPlantat') ? document.getElementById('inpSoiPlantat').value : "";
+            payload.perioadaVegetatie = (catalogSoiuri[payload.soi] && catalogSoiuri[payload.soi].perioadaVegetatie) || "";
 
-            if (!payload.perioadaVegetatie || !payload.soi) {
-                afiseazaStatus("Eroare: Trebuie să selectezi perioada de vegetație și soiul!", "status-error");
+            if (!payload.soi) {
+                afiseazaStatus("Eroare: Trebuie să selectezi soiul!", "status-error");
                 btnSubmit.disabled = false;
                 return;
             }
