@@ -376,6 +376,113 @@
     const DOMENIU_AUTORIZAT = "ulbsibiu.ro";
     let esteAutentificat = false;
     let catalogProduse = {};
+    let catalogSoiuri = {};
+
+    async function incarcaSoiuri() {
+        try {
+            const response = await fetch(GOOGLE_SCRIPT_IMAGISTICA + "?action=soiuri");
+            const rezultat = await response.json();
+            catalogSoiuri = (rezultat && typeof rezultat === 'object' && !Array.isArray(rezultat)) ? rezultat : {};
+        } catch (error) {
+            console.error("❌ Eroare la descărcarea listei de soiuri:", error);
+            catalogSoiuri = {};
+        }
+    }
+
+    function creeazaOptiune(value, text, opts) {
+        const opt = document.createElement('option');
+        opt.value = value;
+        opt.textContent = text;
+        if (opts && opts.disabled) opt.disabled = true;
+        if (opts && opts.selected) opt.selected = true;
+        if (opts && opts.hidden) opt.hidden = true;
+        return opt;
+    }
+
+    function populeazaSoiuriPlantare() {
+        const select = document.getElementById('inpSoiPlantat');
+        if (!select) return;
+        select.innerHTML = '';
+        const nume = Object.keys(catalogSoiuri);
+        if (nume.length === 0) {
+            select.appendChild(creeazaOptiune('', 'Niciun soi definit în nomenclator', {disabled: true, selected: true}));
+            return;
+        }
+        select.appendChild(creeazaOptiune('', '-- Selectați soiul --', {disabled: true, selected: true, hidden: true}));
+        nume.forEach(n => select.appendChild(creeazaOptiune(n, n)));
+        afiseazaCaracteristiciSoi('');
+    }
+
+    async function populeazaSoiuriRecoltare() {
+        const select = document.getElementById('inpSoiRecoltat');
+        if (!select) return;
+        select.innerHTML = '';
+        select.appendChild(creeazaOptiune('', 'Se încarcă...', {disabled: true, selected: true}));
+        try {
+            const response = await fetch(GOOGLE_SCRIPT_IMAGISTICA + "?action=soiuri_plantate");
+            const soiuriPlantate = await response.json();
+            select.innerHTML = '';
+            if (!Array.isArray(soiuriPlantate) || soiuriPlantate.length === 0) {
+                select.appendChild(creeazaOptiune('', 'Niciun soi plantat momentan', {disabled: true, selected: true}));
+                return;
+            }
+            select.appendChild(creeazaOptiune('', '-- Selectați soiul --', {disabled: true, selected: true, hidden: true}));
+            soiuriPlantate.forEach(s => select.appendChild(creeazaOptiune(s, s)));
+        } catch (error) {
+            console.error("❌ Eroare la descărcarea soiurilor plantate:", error);
+            select.innerHTML = '';
+            select.appendChild(creeazaOptiune('', 'Eroare la încărcare', {disabled: true, selected: true}));
+        }
+    }
+
+    function afiseazaCaracteristiciSoi(nume) {
+        const box = document.getElementById('boxCaracteristiciSoi');
+        if (!box) return;
+        const detalii = catalogSoiuri[nume];
+        box.innerHTML = '';
+
+        if (!detalii) {
+            box.style.textAlign = 'center';
+            box.style.display = 'flex';
+            box.textContent = 'Selectează un soi pentru a vedea caracteristicile.';
+            return;
+        }
+
+        box.style.textAlign = 'left';
+        box.style.display = 'block';
+
+        const titlu = document.createElement('div');
+        titlu.style.cssText = 'font-weight:600; color: var(--accent-green); margin-bottom:8px;';
+        titlu.textContent = nume;
+        box.appendChild(titlu);
+
+        const campuri = [
+            ['Perioadă de vegetație', detalii.perioadaVegetatie],
+            ['Culoare epidermă', detalii.culoareEpiderma],
+            ['Culoare parenchim', detalii.culoareParenchim],
+            ['Formă tubercul', detalii.formaTubercul],
+            ['Calitate culinară', detalii.calitateCulinara],
+            ['Rezistență patogeni', detalii.rezistentaPatogeni],
+            ['Rezistență dăunători', detalii.rezistentaDaunatori]
+        ];
+
+        campuri.forEach(([eticheta, valoare]) => {
+            const linie = document.createElement('div');
+            const strong = document.createElement('strong');
+            strong.textContent = eticheta + ': ';
+            linie.appendChild(strong);
+            linie.appendChild(document.createTextNode(valoare || '-'));
+            box.appendChild(linie);
+        });
+
+        const selectPerioada = document.getElementById('inpPerioadaVegetatie');
+        if (selectPerioada && detalii.perioadaVegetatie) {
+            const optiuniValide = Array.from(selectPerioada.options).map(o => o.value);
+            if (optiuniValide.includes(detalii.perioadaVegetatie)) {
+                selectPerioada.value = detalii.perioadaVegetatie;
+            }
+        }
+    }
 
     async function incarcaNomenclator() {
     console.log("Pornesc descărcarea catalogului...");
@@ -512,6 +619,7 @@ async function aplicăAutentificareReușită(idToken, email) {
                 document.getElementById('app-content').style.display = 'block';
                 if (typeof verificaAfisareButon === 'function') verificaAfisareButon();
                 incarcaNomenclator();
+                incarcaSoiuri();
 
             } else {
                 esteAutentificat = false;
@@ -569,7 +677,9 @@ async function aplicăAutentificareReușită(idToken, email) {
             {val: '', text: '-- Alege Lucrarea --', disabled: true, selected: true},
             {val: 'Irigare', text: 'A. Irigare'},
             {val: 'Tratament Fitosanitar', text: 'B. Tratament Fitosanitar'},
-            {val: 'Fertilizare', text: 'C. Fertilizare / Amendare'}
+            {val: 'Fertilizare', text: 'C. Fertilizare / Amendare'},
+            {val: 'Plantare', text: 'D. Plantare'},
+            {val: 'Recoltare', text: 'E. Recoltare'}
         ]
     };
    const sabloaneCampuri = {
@@ -634,6 +744,60 @@ async function aplicăAutentificareReușită(idToken, email) {
                     <input type="number" id="inpNorma" placeholder="ex: 300" autocomplete="off">
                 </div>
                 <div class="form-group">
+                    <label for="inpObs">Observații</label>
+                    <input type="text" id="inpObs" placeholder="Adaugă detalii" autocomplete="off">
+                </div>
+            </div>
+        `,
+       plantare: `
+            <div style="display: flex; gap: 20px; flex-wrap: wrap; margin-top: 10px;">
+                <div style="flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 20px;">
+                    <div class="form-group">
+                        <label for="inpPerioadaVegetatie">Perioadă de vegetație</label>
+                        <select id="inpPerioadaVegetatie">
+                            <option value="" disabled selected hidden>-- Selectați --</option>
+                            <option value="Extratimpuriu">Extratimpuriu</option>
+                            <option value="Timpuriu">Timpuriu</option>
+                            <option value="Târziu">Târziu</option>
+                            <option value="Extratârziu">Extratârziu</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="inpSoiPlantat">Soi</label>
+                        <select id="inpSoiPlantat" onchange="afiseazaCaracteristiciSoi(this.value)">
+                            <option value="" disabled selected hidden>Se încarcă soiurile...</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="boxCaracteristiciSoi" style="flex: 1; min-width: 220px; background: var(--bg-card2); border: 1px solid var(--border); border-radius: 8px; padding: 16px 20px; font-size: 0.9rem; color: var(--text-secondary); line-height: 1.7; display: flex; align-items: center; justify-content: center; text-align: center;">
+                    Selectează un soi pentru a vedea caracteristicile.
+                </div>
+            </div>
+            <div class="form-group full-width" style="margin-top: 20px;">
+                <label for="inpObs">Observații</label>
+                <input type="text" id="inpObs" placeholder="Adaugă detalii" autocomplete="off">
+            </div>
+        `,
+       recoltare: `
+            <div class="form-grid full-width">
+                <div class="form-group">
+                    <label for="inpSoiRecoltat">Soi</label>
+                    <select id="inpSoiRecoltat">
+                        <option value="" disabled selected hidden>Se încarcă soiurile plantate...</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="inpCantitate">Cantitate recoltată</label>
+                    <input type="number" id="inpCantitate" step="0.01" min="0" placeholder="ex: 25.5" autocomplete="off">
+                </div>
+                <div class="form-group">
+                    <label for="inpUnitateMasura">Unitate de măsură</label>
+                    <select id="inpUnitateMasura">
+                        <option value="t/ha">tone/ha</option>
+                        <option value="kg/m2">kg/m²</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
                     <label for="inpObs">Observații</label>
                     <input type="text" id="inpObs" placeholder="Adaugă detalii" autocomplete="off">
                 </div>
@@ -817,6 +981,12 @@ catSelect.addEventListener('change', function() {
         dynamicFields.innerHTML = sabloaneCampuri.irigare;
     } else if (cat === 'Fertilizare') {
         dynamicFields.innerHTML = sabloaneCampuri.fertilizare;
+    } else if (cat === 'Plantare') {
+        dynamicFields.innerHTML = sabloaneCampuri.plantare;
+        populeazaSoiuriPlantare();
+    } else if (cat === 'Recoltare') {
+        dynamicFields.innerHTML = sabloaneCampuri.recoltare;
+        populeazaSoiuriRecoltare();
     } else {
         dynamicFields.innerHTML = sabloaneCampuri.imagistica;
     }
@@ -901,6 +1071,27 @@ async function trimiteDate() {
             payload.produsComercial = document.getElementById('inpProdus') ? document.getElementById('inpProdus').value : "";
             payload.substantaActiva = document.getElementById('inpSubstanta') ? document.getElementById('inpSubstanta').value : "";
             payload.dozaFert = document.getElementById('inpDozaFert') ? document.getElementById('inpDozaFert').value : "";
+        }
+        else if (categorie === 'Plantare') {
+            payload.perioadaVegetatie = document.getElementById('inpPerioadaVegetatie') ? document.getElementById('inpPerioadaVegetatie').value : "";
+            payload.soi = document.getElementById('inpSoiPlantat') ? document.getElementById('inpSoiPlantat').value : "";
+
+            if (!payload.perioadaVegetatie || !payload.soi) {
+                afiseazaStatus("Eroare: Trebuie să selectezi perioada de vegetație și soiul!", "status-error");
+                btnSubmit.disabled = false;
+                return;
+            }
+        }
+        else if (categorie === 'Recoltare') {
+            payload.soi = document.getElementById('inpSoiRecoltat') ? document.getElementById('inpSoiRecoltat').value : "";
+            payload.cantitate = document.getElementById('inpCantitate') ? document.getElementById('inpCantitate').value : "";
+            payload.unitateMasura = document.getElementById('inpUnitateMasura') ? document.getElementById('inpUnitateMasura').value : "";
+
+            if (!payload.soi || !payload.cantitate) {
+                afiseazaStatus("Eroare: Trebuie să selectezi soiul și să introduci cantitatea recoltată!", "status-error");
+                btnSubmit.disabled = false;
+                return;
+            }
         }
     }
 
