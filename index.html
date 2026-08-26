@@ -241,6 +241,23 @@
     <h2 class="page-title">Platformă de predicție și avertizare pentru mana cartofului (<i>Phytophthora infestans</i>) pe baza datelor de microclimat cu arhitectură neuro-simbolică</h2>
 
     <div class="module-grid">
+        <div class="module-card card-full-width" style="cursor: default; border-color: var(--accent-green); background: var(--bg-card2);">
+            <div class="module-icon" style="font-size: 2.5rem; margin-bottom: 10px;">🌱</div>
+            <div class="module-title" style="color: var(--text-primary);">Status Fenologic</div>
+            <div class="module-desc">Calcul determinist bazat pe acumularea termică a speciei <i>Solanum tuberosum</i>, începând cu data plantării.</div>
+
+            <div style="display: flex; justify-content: space-around; width: 100%; margin-top: 25px; border-top: 1px solid var(--border); padding-top: 20px;">
+                <div style="text-align: center;">
+                    <span style="display: block; font-family: var(--mono); font-size: 0.75rem; color: var(--text-muted); letter-spacing: 1px;">FENOFAZA</span>
+                    <strong style="color: var(--accent-green); font-size: 1.2rem;" id="status-fenofaza">Se calculează...</strong>
+                </div>
+                <div style="text-align: center;">
+                    <span style="display: block; font-family: var(--mono); font-size: 0.75rem; color: var(--text-muted); letter-spacing: 1px;">GDD ACUMULAT</span>
+                    <strong style="color: var(--text-primary); font-size: 1.2rem;" id="status-gdd">--</strong>
+                    <span style="font-size: 0.8rem; color: var(--text-secondary);"> (bază 7.0°C, de la plantare)</span>
+                </div>
+            </div>
+        </div>
         <a href="mana.html" class="module-card">
             <div class="module-icon">🥔</div>
             <div class="module-title">Monitorizare Fitosanitară</div>
@@ -279,6 +296,16 @@
     fetch('raport.json')
         .then(response => response.json())
         .then(data => {
+
+            if (data.abiotic_si_feno) {
+                const fenoEl = document.getElementById('status-fenofaza');
+                const gddEl = document.getElementById('status-gdd');
+                if (fenoEl) fenoEl.textContent = data.abiotic_si_feno.fenofaza;
+                if (gddEl) {
+                    const gdd = data.abiotic_si_feno.gdd;
+                    gddEl.textContent = (gdd === null || gdd === undefined) ? "--" : gdd;
+                }
+            }
 
             const updateStatus = (elementId, statusText) => {
                 const badge = document.getElementById(elementId);
@@ -321,6 +348,11 @@
                 b.textContent = 'DATE INDISPONIBILE';
                 b.style.color = 'var(--text-muted)';
             });
+
+            const fenoEl = document.getElementById('status-fenofaza');
+            const gddEl = document.getElementById('status-gdd');
+            if (fenoEl) fenoEl.textContent = "Eroare citire date";
+            if (gddEl) gddEl.textContent = "--";
         });
 </script>
 
