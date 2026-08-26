@@ -101,6 +101,61 @@
             box-shadow: 0 1px 3px rgba(28, 43, 31, 0.05);
         }
 
+        .timeline-wrapper {
+            overflow-x: auto;
+            padding-bottom: 8px;
+        }
+
+        .timeline {
+            position: relative;
+            display: flex;
+            min-width: 900px;
+            padding-top: 10px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 17px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border-bright);
+        }
+
+        .timeline-step {
+            flex: 1;
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: 0 12px;
+        }
+
+        .timeline-dot {
+            width: 14px;
+            height: 14px;
+            margin: 0 auto 14px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            box-shadow: 0 0 0 4px var(--bg-card);
+        }
+
+        .timeline-period {
+            font-family: var(--mono);
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--accent-green);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .timeline-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
         .page-title {
             font-size: 2rem; color: var(--accent-green); margin-bottom: 20px; font-weight: 700;
         }
@@ -150,6 +205,7 @@
             footer { flex-direction: column; gap: 20px; text-align: center; padding: 30px 20px; }
             footer .f-right { text-align: center; }
             .summary-box { padding: 20px; }
+            .timeline { min-width: 720px; }
         }
     </style>
 </head>
@@ -170,6 +226,44 @@
 
     <div class="summary-box">
         <p><strong>Platforma de predicție și avertizare pentru mana cartofului (<i>Phytophthora infestans</i>)</strong> este un sistem suport decizional (DSS) fundamentat pe o <strong>Arhitectură Neuro-Simbolică</strong> pe 5 niveluri, dezvoltat în cadrul competiției AOSR-TEAMS-IV pentru cultura cartofului. Platforma fuzionează datele telemetrice de microclimat cu modele epidemiologice deterministe și un motor de Inteligență Artificială Generativă, urmând ca prognozele generate să fie calibrate printr-o buclă de validare Ground-Truth bazată pe teledetecție UAV și evaluări fitopatologice directe, în cadrul câmpului experimental al Fermei Didactice și de Cercetare Rusciori (ULBS Sibiu). Obiectivul central este optimizarea ferestrelor de intervenție fitosanitară și reducerea amprentei chimice a fungicidelor, fără compromiterea producției.</p>
+    </div>
+
+    <div class="content-card">
+        <h2 class="page-title" style="font-size: 1.6rem;">Calendarul proiectului</h2>
+        <div class="timeline-wrapper">
+            <div class="timeline">
+                <div class="timeline-step">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-period">Iunie – Iulie 2026</div>
+                    <div class="timeline-label">Configurare echipamente și flux de colectare a datelor</div>
+                </div>
+                <div class="timeline-step">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-period">Iulie – Decembrie 2026</div>
+                    <div class="timeline-label">Proiectare arhitectură neuro-simbolică și integrare motor de raționament AI</div>
+                </div>
+                <div class="timeline-step">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-period">Ianuarie – Martie 2027</div>
+                    <div class="timeline-label">Testare și simulare prototip (<i>in-silico</i>)</div>
+                </div>
+                <div class="timeline-step">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-period">Aprilie 2027</div>
+                    <div class="timeline-label">Înființare câmp experimental</div>
+                </div>
+                <div class="timeline-step">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-period">Aprilie – Octombrie 2027</div>
+                    <div class="timeline-label">Implementare prototip în câmpul experimental, monitorizare tehnică și științifică</div>
+                </div>
+                <div class="timeline-step">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-period">Septembrie – Octombrie 2027</div>
+                    <div class="timeline-label">Evaluare performanță predictivă și calibrare post-experimentală</div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <div class="content-card">
