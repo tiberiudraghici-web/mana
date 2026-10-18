@@ -1,0 +1,13 @@
+{
+    "_nota": "Fișier configurare cultură — editat manual sau prin teren.html",
+    "_format_data": "YYYY-MM-DD (ex: 2026-04-15)",
+
+    "cultura_activa": false,
+    "data_plantarii": null,
+    "recoltata": false,
+    "data_recoltare": null,
+
+    "_cultura_activa": "true = cultură înregistrată, rapoarte fitosanitare complete",
+    "_data_plantarii": "null = nu există cultură. Completați cu data plantării reale.",
+    "_recoltata": "true = cultura a fost recoltată, rapoartele devin informative"
+}
